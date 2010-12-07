@@ -1,0 +1,27 @@
+--------------------------------------------------------------------------------
+filesdir-check 1.0 : 2010-12-07
+--------------------------------------------------------------------------------
+
+ - Rewrote the program in python. (It used to be a bash script)
+ - Added basic command-line options: --verbose, --version, --help
+ - Fixed handling directories in $FILESDIR: they are now recursed
+ - Renamed the program to filesdir-check. The python module is filesdir_check
+ - Started using git for version control. Prior to this there was no version
+   control! The repository is available at github.com/jalan
+
+--------------------------------------------------------------------------------
+file_hunter 0.2 : 2010-11-12
+--------------------------------------------------------------------------------
+
+ - Removed the check for empty file directories. Since I didn't find any, I
+   think something further upstream already prevents that problem
+ - Renamed variables to be more in line with the usual portage terminology
+ - Strip all quotation marks from ebuilds. Now we catch things like this:
+     epatch "${FILESDIR}/${P}"-gentoo.patch
+   This change dropped about 150 false positives
+
+--------------------------------------------------------------------------------
+file_hunter 0.1 : 2010-10-07
+--------------------------------------------------------------------------------
+
+ - Initial creation

@@ -1,0 +1,27 @@
+Inherit eclasses. This could get ugly, since an eclass can inherit more
+eclasses. It may be best to dive into the portage internals in order to tackle
+this one. I imagine there's a function in there somewhere that does inherits.
+
+Ignore comments in ebuilds. If a file is only mentioned in a comment, it
+probably shouldn't be around anymore.
+
+Implement a system that keeps track of how many unused files there are (seem
+to be) on a regular basis, and makes plots of it. Weekly updates would be nice.
+If I make plots like this, I'll have to put a big red line to mark each change
+to the program--otherwise it might look like a huge change in the number of
+unused files.
+
+Allow limited checking: specify categories and/or cat/package on the command
+line.
+
+Add options to check portdir only, overlays only, or both. It wouldn't be hard
+to check portdir_overlay as well, but I don't know if that covers layman
+overlays. maybe layman uses portdir_overlay too? space-delimited list of dirs.
+Here's some code to start with
+parser.add_option("-o", "--overlays",
+                  action="store_true", dest="overlays", default=False,
+                  help="Check overlays instead of the main tree. Each entry in PORTDIR_OVERLAY will be checked individually.")
+
+Replace optparse: use argparse for python 2.7 and later. I'll probably do this
+around the time that it becomes no longer necessary to have python 2.6 on a
+stable gentoo system.
