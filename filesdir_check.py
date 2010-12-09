@@ -86,7 +86,7 @@ def _parse_options():
 	Parse and check command-line options using optparse.
 	Return the options object.
 	"""
-	parser = optparse.OptionParser()
+	parser = optparse.OptionParser(usage="")
 	parser.add_option("-v", "--verbose",
 	                  action="store_true", dest="verbose", default=False,
 	                  help="display more output, not just the offending files")
