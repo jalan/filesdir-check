@@ -131,6 +131,9 @@ def _process_ebuild(base_directory, category_package, ebuild):
 	ebuild_text = ebuild_text.replace("${P}", p)
 	ebuild_text = ebuild_text.replace("$P", p)
 
+	# Remove comments on a line by themselves
+	ebuild_text = re.sub(re.compile("^\s*#.*?$", re.MULTILINE), "", ebuild_text)
+
 	return ebuild_text
 
 def _main():
