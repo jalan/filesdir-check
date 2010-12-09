@@ -11,7 +11,8 @@ def check_category(base_directory, category, verbose=False):
 	"""
 	Check each package in 'base_directory' (e.g. PORTDIR) belonging to 'category' (e.g. app-misc) for unused FILESDIR files.
 	Return a list of possibly unused files.
-	When this script is being used stand-alone, print them out, according to 'verbose'.
+	When this script is being used stand-alone, print them out.
+	If 'verbose', print out more details about what is going on.
 	"""
 	if verbose: print "Checking category '%s'..." % category
 	category_packages = portage.portdb.cp_all([category], [base_directory])
@@ -85,6 +86,9 @@ def _parse_options():
 	Return the options object.
 	"""
 	parser = optparse.OptionParser(usage="")
+	parser.add_option("-o", "--overlays",
+	                  action="store_true", dest="overlays", default=False,
+	                  help="check overlays instead of the main tree")
 	parser.add_option("-v", "--verbose",
 	                  action="store_true", dest="verbose", default=False,
 	                  help="display more output, not just the offending files")
@@ -136,11 +140,19 @@ def _process_ebuild(base_directory, category_package, ebuild):
 
 def _main():
 	options = _parse_options()
-	portdir = portage.settings["PORTDIR"]
 	categories = portage.settings.categories
 
-	for category in categories:
-		check_category(portdir, category, options.verbose)
+	if options.overlays:
+		portdir_overlay = portage.settings["PORTDIR_OVERLAY"]
+		overlays = portdir_overlay.split(" ")
+		for overlay in overlays:
+			if options.verbose: print "CHECKING OVERLAY '%s'..." % overlay
+			for category in categories:
+				check_category(overlay, category, options.verbose)
+	else:
+		portdir = portage.settings["PORTDIR"]
+		for category in categories:
+			check_category(portdir, category, options.verbose)
 
 if __name__ == "__main__":
 	_main()
