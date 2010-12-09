@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-# filesdir_check.py
 version_string = "filesdir-check 1.0"
 
 import optparse
