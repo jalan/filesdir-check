@@ -138,8 +138,6 @@ def _main():
 	portdir = portage.settings["PORTDIR"]
 	categories = portage.settings.categories
 
-	#categories = ["media-sound"] # TODO: remove this line, which is for testing
-
 	for category in categories:
 		check_category(portdir, category, options.verbose)
 
