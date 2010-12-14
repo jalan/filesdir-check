@@ -82,13 +82,18 @@ def _list_files(filesdir):
 
 def _parse_options():
 	"""
-	Parse and check command-line options using optparse.
+	Parse command-line options using optparse.
+	Do various error checks.
 	Return the options object.
 	"""
 	parser = optparse.OptionParser(usage="")
+	parser.disable_interspersed_args()
+	parser.add_option("-d", "--directory", dest="directory",
+	                  action="store", type="string",
+	                  help="just check the tree at DIR", metavar="DIR")
 	parser.add_option("-o", "--overlays",
 	                  action="store_true", dest="overlays", default=False,
-	                  help="check overlays instead of the main tree")
+	                  help="check all overlays instead of the main tree")
 	parser.add_option("-v", "--verbose",
 	                  action="store_true", dest="verbose", default=False,
 	                  help="display more output, not just the offending files")
@@ -98,6 +103,17 @@ def _parse_options():
 	(options, arguments) = parser.parse_args()
 	if arguments:
 		print "filesdir-check: error: this program accepts no arguments (yet)"
+		sys.exit(1)
+	if options.directory is not None and options.overlays:
+		for arg in sys.argv:
+			if arg == "-d" or arg == "--directory":
+				directory_option = arg
+			if arg == "-o" or arg == "--overlays":
+				overlays_option = arg
+		print "filesdir-check: error: conflicting options: {0}, {1}".format(directory_option, overlays_option)
+		sys.exit(1)
+	if options.directory is not None and not os.path.isdir(options.directory):
+		print "filesdir-check: error: '%s' is not a valid directory" % options.directory
 		sys.exit(1)
 	if options.show_version:
 		print version_string
@@ -149,6 +165,10 @@ def _main():
 			if options.verbose: print "CHECKING OVERLAY '%s'..." % overlay
 			for category in categories:
 				check_category(overlay, category, options.verbose)
+	elif options.directory:
+		if options.verbose: print "CHECKING DIRECTORY '%s'..." % options.directory
+		for category in categories:
+			check_category(options.directory, category, options.verbose)
 	else:
 		portdir = portage.settings["PORTDIR"]
 		for category in categories:
