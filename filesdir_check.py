@@ -14,7 +14,7 @@ def check_category(base_directory, category, verbose=False):
 	When this script is being used stand-alone, print them out.
 	If 'verbose', print out more details about what is going on.
 	"""
-	if verbose: print "Checking category '%s'..." % category
+	if verbose: print "Checking category '{0}'...".format(category)
 	category_packages = portage.portdb.cp_all([category], [base_directory])
 	offending_files = []
 	for category_package in category_packages:
@@ -28,7 +28,7 @@ def check_category_package(base_directory, category_package, verbose=False):
 	When this script is being used stand-alone, print them out.
 	If 'verbose', print out more details about what is going on.
 	"""
-	if verbose: print "\tChecking '%s'..." % category_package
+	if verbose: print "\tChecking '{0}'...".format(category_package)
 	filesdir = os.path.join(base_directory, category_package, "files")
 	if not os.path.isdir(filesdir):
 		if verbose: print "\t\tIt has no 'files' directory."
@@ -39,7 +39,7 @@ def check_category_package(base_directory, category_package, verbose=False):
 		ebuilds[ebuild] = _process_ebuild(base_directory, category_package, ebuild)
 	offending_files = []
 	for file in file_list:
-		if verbose: print "\t\tChecking file '%s'..." % file,
+		if verbose: print "\t\tChecking file '{0}'...".format(file),
 		referencers = []
 		for ebuild in dict.iterkeys(ebuilds):
 			if _grep(re.escape(file), [ebuilds[ebuild]]):
@@ -49,7 +49,7 @@ def check_category_package(base_directory, category_package, verbose=False):
 			elif __name__ == "__main__": print os.path.join(base_directory, category_package, "files", file)
 			offending_files.append(os.path.join(base_directory, category_package, "files", file))
 		else:
-			if verbose: print "referenced by '%s'." % "', '".join(referencers)
+			if verbose: print "referenced by '{0}'.".format("', '".join(referencers))
 	return offending_files
 
 def _grep(pattern, string_list):
@@ -113,7 +113,7 @@ def _parse_options():
 		print "filesdir-check: error: conflicting options: {0}, {1}".format(directory_option, overlays_option)
 		sys.exit(1)
 	if options.directory is not None and not os.path.isdir(options.directory):
-		print "filesdir-check: error: '%s' is not a valid directory" % options.directory
+		print "filesdir-check: error: '{0}' is not a valid directory".format(options.directory)
 		sys.exit(1)
 	if options.show_version:
 		print version_string
@@ -162,11 +162,11 @@ def _main():
 		portdir_overlay = portage.settings["PORTDIR_OVERLAY"]
 		overlays = portdir_overlay.split(" ")
 		for overlay in overlays:
-			if options.verbose: print "CHECKING OVERLAY '%s'..." % overlay
+			if options.verbose: print "CHECKING OVERLAY '{0}'...".format(overlay)
 			for category in categories:
 				check_category(overlay, category, options.verbose)
 	elif options.directory:
-		if options.verbose: print "CHECKING DIRECTORY '%s'..." % options.directory
+		if options.verbose: print "CHECKING DIRECTORY '{0}'...".format(options.directory)
 		for category in categories:
 			check_category(options.directory, category, options.verbose)
 	else:
