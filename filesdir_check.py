@@ -80,12 +80,13 @@ def _list_files(filesdir):
 			file_list.append(item)
 	return file_list
 
-def _parse_options():
+def _parse_command_line():
 	"""
-	Parse command-line options using optparse.
+	Parse command-line using optparse.
 	Do various error checks.
-	Return the options object.
+	Return the options object and a processed argument list.
 	"""
+	processed_arguments = []
 	parser = optparse.OptionParser(usage="")
 	parser.disable_interspersed_args()
 	parser.add_option("-d", "--directory", dest="directory",
@@ -100,10 +101,7 @@ def _parse_options():
 	parser.add_option("-V", "--version",
 	                  action="store_true", dest="show_version", default=False,
 	                  help="display version information")
-	(options, arguments) = parser.parse_args()
-	if arguments:
-		print "filesdir-check: error: this program accepts no arguments (yet)"
-		sys.exit(1)
+	options, arguments = parser.parse_args()
 	if options.directory is not None and options.overlays:
 		for arg in sys.argv:
 			if arg == "-d" or arg == "--directory":
@@ -115,10 +113,24 @@ def _parse_options():
 	if options.directory is not None and not os.path.isdir(options.directory):
 		print "filesdir-check: error: '{}' is not a valid directory".format(options.directory)
 		sys.exit(1)
+	if arguments:
+		all_categories = portage.settings.categories
+		all_category_packages = portage.portdb.cp_all()
+		# Valid argument forms: category, category/package, package
+		for argument in arguments:
+			if argument in all_categories:
+				processed_arguments.append(argument)
+			elif argument in all_category_packages:
+				processed_arguments.append(argument)
+			elif _grep("/" + argument, all_category_packages):
+				processed_arguments.extend(_grep("/" + argument + '$', all_category_packages))
+			else:
+				print "filesdir-check: error: '{}' is not a valid category or package".format(argument)
+				sys.exit(1)
 	if options.show_version:
 		print version_string
 		sys.exit(0)
-	return options
+	return options, processed_arguments
 
 def _process_ebuild(base_directory, category_package, ebuild):
 	"""
@@ -155,24 +167,29 @@ def _process_ebuild(base_directory, category_package, ebuild):
 	return ebuild_text
 
 def _main():
-	options = _parse_options()
-	categories = portage.settings.categories
+	all_categories = portage.settings.categories
+
+	options, processed_arguments = _parse_command_line()
 
 	if options.overlays:
 		portdir_overlay = portage.settings["PORTDIR_OVERLAY"]
-		overlays = portdir_overlay.split(" ")
-		for overlay in overlays:
-			if options.verbose: print "CHECKING OVERLAY '{}'...".format(overlay)
-			for category in categories:
-				check_category(overlay, category, options.verbose)
+		target_directories = portdir_overlay.split(" ")
 	elif options.directory:
-		if options.verbose: print "CHECKING DIRECTORY '{}'...".format(options.directory)
-		for category in categories:
-			check_category(options.directory, category, options.verbose)
+		target_directories = [options.directory]
 	else:
-		portdir = portage.settings["PORTDIR"]
-		for category in categories:
-			check_category(portdir, category, options.verbose)
+		target_directories = [portage.settings["PORTDIR"]]
+
+	for target_directory in target_directories:
+		if options.verbose: print "CHECKING TREE AT '{}'...".format(target_directory)
+		if processed_arguments:
+			for argument in processed_arguments:
+				if argument in all_categories:
+					check_category(target_directory, argument, options.verbose)
+				else:
+					check_category_package(target_directory, argument, options.verbose)
+		else:
+			for category in all_categories:
+				check_category(target_directory, category, options.verbose)
 
 if __name__ == "__main__":
 	_main()
