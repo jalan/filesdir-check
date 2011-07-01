@@ -7,6 +7,24 @@ import re
 import string
 import sys
 
+# Subclass optparse to make it dance like I want it to
+class MyOptionParser(optparse.OptionParser):
+	def error(self, msg):
+		self.exit(2, "%s: error: %s\n" % (self.get_prog_name(), msg))
+
+	def format_help(self, formatter=None):
+		if formatter is None:
+			formatter = self.formatter
+		result = []
+		if self.usage:
+			result.append(self.get_usage() + "\n")
+		result.append("Arguments:\n  Each of the following is a valid argument:\n    category\n    package\n    category/package\n\n")
+		if self.description:
+			result.append(self.format_description(formatter) + "\n")
+		result.append(self.format_option_help(formatter))
+		result.append(self.format_epilog(formatter))
+		return "".join(result)
+
 def check_category(base_directory, category, verbose=False):
 	"""
 	Check each package in 'base_directory' (e.g. PORTDIR) belonging to 'category' (e.g. app-misc) for unused FILESDIR files.
@@ -87,7 +105,7 @@ def _parse_command_line():
 	Return the options object and a processed argument list.
 	"""
 	processed_arguments = []
-	parser = optparse.OptionParser(usage="")
+	parser = MyOptionParser(usage="%prog [options] [arguments]")
 	parser.disable_interspersed_args()
 	parser.add_option("-d", "--directory", dest="directory",
 	                  action="store", type="string",
