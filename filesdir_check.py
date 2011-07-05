@@ -78,7 +78,7 @@ def _grep(pattern, string_list):
 	'pattern' is a string describing a regular expression to be re.compiled.
 	"""
 	expression = re.compile(pattern)
-	return filter(expression.search, string_list)
+	return [i for i in filter(expression.search, string_list)]
 
 def _list_ebuilds(base_directory, category_package):
 	"""
