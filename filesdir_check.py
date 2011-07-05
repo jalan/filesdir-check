@@ -1,5 +1,6 @@
 from __future__ import print_function
 
+import codecs
 import optparse
 import os
 import portage
@@ -55,13 +56,13 @@ def check_category_package(base_directory, category_package, verbose=False):
 		return []
 	file_list = _list_files(filesdir)
 	ebuilds = dict.fromkeys(_list_ebuilds(base_directory, category_package))
-	for ebuild in dict.iterkeys(ebuilds):
+	for ebuild in dict.keys(ebuilds):
 		ebuilds[ebuild] = _process_ebuild(base_directory, category_package, ebuild)
 	offending_files = []
 	for file in file_list:
 		if verbose: print("\t\tChecking file '{}'...".format(file), end=' ')
 		referencers = []
-		for ebuild in dict.iterkeys(ebuilds):
+		for ebuild in dict.keys(ebuilds):
 			if _grep(re.escape(file), [ebuilds[ebuild]]):
 				referencers.append(ebuild)
 		if not referencers:
@@ -162,9 +163,10 @@ def _process_ebuild(base_directory, category_package, ebuild):
 	pv = re.sub("-r[0-9]+$", "", pvr)
 	p = pn + "-" + pv
 
-	ebuild_file = open(os.path.join(base_directory, category_package, ebuild))
-	ebuild_text = ebuild_file.read().decode("utf-8") # ebuilds are in unicode
-	ebuild_file.close();
+	# ebuilds are in utf-8
+	ebuild_file = codecs.open(os.path.join(base_directory, category_package, ebuild), 'r', encoding='utf-8')
+	ebuild_text = ebuild_file.read()
+	ebuild_file.close()
 
 	# Remove double quotes
 	ebuild_text = ebuild_text.replace('"', "")
