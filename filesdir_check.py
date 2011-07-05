@@ -1,4 +1,4 @@
-version_string = "filesdir-check 1.0"
+from __future__ import print_function
 
 import optparse
 import os
@@ -6,6 +6,8 @@ import portage
 import re
 import string
 import sys
+
+version_string = "filesdir-check 1.0"
 
 # Subclass optparse to make it dance like I want it to
 class MyOptionParser(optparse.OptionParser):
@@ -32,7 +34,7 @@ def check_category(base_directory, category, verbose=False):
 	When this script is being used stand-alone, print them out.
 	If 'verbose', print out more details about what is going on.
 	"""
-	if verbose: print "Checking category '{}'...".format(category)
+	if verbose: print("Checking category '{}'...".format(category))
 	category_packages = portage.portdb.cp_all([category], [base_directory])
 	offending_files = []
 	for category_package in category_packages:
@@ -46,10 +48,10 @@ def check_category_package(base_directory, category_package, verbose=False):
 	When this script is being used stand-alone, print them out.
 	If 'verbose', print out more details about what is going on.
 	"""
-	if verbose: print "\tChecking '{}'...".format(category_package)
+	if verbose: print("\tChecking '{}'...".format(category_package))
 	filesdir = os.path.join(base_directory, category_package, "files")
 	if not os.path.isdir(filesdir):
-		if verbose: print "\t\tIt has no 'files' directory."
+		if verbose: print("\t\tIt has no 'files' directory.")
 		return []
 	file_list = _list_files(filesdir)
 	ebuilds = dict.fromkeys(_list_ebuilds(base_directory, category_package))
@@ -57,17 +59,17 @@ def check_category_package(base_directory, category_package, verbose=False):
 		ebuilds[ebuild] = _process_ebuild(base_directory, category_package, ebuild)
 	offending_files = []
 	for file in file_list:
-		if verbose: print "\t\tChecking file '{}'...".format(file),
+		if verbose: print("\t\tChecking file '{}'...".format(file), end=' ')
 		referencers = []
 		for ebuild in dict.iterkeys(ebuilds):
 			if _grep(re.escape(file), [ebuilds[ebuild]]):
 				referencers.append(ebuild)
 		if not referencers:
-			if verbose: print "no reference found!"
-			elif __name__ == "__main__": print os.path.join(base_directory, category_package, "files", file)
+			if verbose: print("no reference found!")
+			elif __name__ == "__main__": print(os.path.join(base_directory, category_package, "files", file))
 			offending_files.append(os.path.join(base_directory, category_package, "files", file))
 		else:
-			if verbose: print "referenced by '{}'.".format("', '".join(referencers))
+			if verbose: print("referenced by '{}'.".format("', '".join(referencers)))
 	return offending_files
 
 def _grep(pattern, string_list):
@@ -126,10 +128,10 @@ def _parse_command_line():
 				directory_option = arg
 			if arg == "-o" or arg == "--overlays":
 				overlays_option = arg
-		print "filesdir-check: error: conflicting options: {}, {}".format(directory_option, overlays_option)
+		print("filesdir-check: error: conflicting options: {}, {}".format(directory_option, overlays_option))
 		sys.exit(1)
 	if options.directory is not None and not os.path.isdir(options.directory):
-		print "filesdir-check: error: '{}' is not a valid directory".format(options.directory)
+		print("filesdir-check: error: '{}' is not a valid directory".format(options.directory))
 		sys.exit(1)
 	if arguments:
 		all_categories = portage.settings.categories
@@ -143,10 +145,10 @@ def _parse_command_line():
 			elif _grep("/" + argument, all_category_packages):
 				processed_arguments.extend(_grep("/" + argument + '$', all_category_packages))
 			else:
-				print "filesdir-check: error: '{}' is not a valid category or package".format(argument)
+				print("filesdir-check: error: '{}' is not a valid category or package".format(argument))
 				sys.exit(1)
 	if options.show_version:
-		print version_string
+		print(version_string)
 		sys.exit(0)
 	return options, processed_arguments
 
@@ -198,7 +200,7 @@ def _main():
 		target_directories = [portage.settings["PORTDIR"]]
 
 	for target_directory in target_directories:
-		if options.verbose: print "CHECKING TREE AT '{}'...".format(target_directory)
+		if options.verbose: print("CHECKING TREE AT '{}'...".format(target_directory))
 		if processed_arguments:
 			for argument in processed_arguments:
 				if argument in all_categories:
