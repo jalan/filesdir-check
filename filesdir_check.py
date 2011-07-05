@@ -9,7 +9,7 @@ import sys
 
 version_string = "filesdir-check 1.0"
 
-# Subclass optparse to make it dance like I want it to
+# Subclass OptionParser to make it dance like I want it to
 class MyOptionParser(optparse.OptionParser):
 	def error(self, msg):
 		self.exit(2, "%s: error: %s\n" % (self.get_prog_name(), msg))
