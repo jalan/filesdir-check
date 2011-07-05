@@ -163,7 +163,7 @@ def _process_ebuild(base_directory, category_package, ebuild):
 	p = pn + "-" + pv
 
 	ebuild_file = open(os.path.join(base_directory, category_package, ebuild))
-	ebuild_text = unicode(ebuild_file.read(), "utf-8") # ebuilds are in unicode
+	ebuild_text = ebuild_file.read().decode("utf-8") # ebuilds are in unicode
 	ebuild_file.close();
 
 	# Remove double quotes
