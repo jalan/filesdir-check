@@ -8,7 +8,7 @@ import re
 import string
 import sys
 
-version_string = "filesdir-check 1.0"
+version_string = "filesdir-check 1.1"
 
 # Subclass OptionParser to make it dance like I want it to
 class MyOptionParser(optparse.OptionParser):
