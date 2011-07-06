@@ -3,7 +3,7 @@
 from distutils.core import setup
 
 setup(name = 'filesdir-check',
-      version = '1.0',
+      version = '1.1',
       description = 'filesdir-check helps locate unused FILESDIR files',
       author = 'Jason Palmer',
       author_email = 'jalanpalmer@gmail.com',
