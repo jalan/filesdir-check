@@ -40,7 +40,7 @@ filesdir_check.check_category(portdir, "media-libs", verbose=True)
 
 # List of possibly unused files for 'media-sound/exaile', in my local overlay
 local_overlay = "/usr/local/portage"
-more_unused_files =	filesdir_check.check_category_package(local_overlay, "media-sound/exaile")
+more_unused_files = filesdir_check.check_category_package(local_overlay, "media-sound/exaile")
 
 - See also ---------------------------------------------------------------------
 
