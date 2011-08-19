@@ -16,7 +16,7 @@ overlays listed in PORTDIR_OVERLAY. With the --directory option you can name the
 location of a specific overlay to check.
 
 You can also list specific categories and packages to check on the command line.
-For example	'filesdir-check www-client sys-apps/portage gvim' will check
+For example 'filesdir-check www-client sys-apps/portage gvim' will check
  - every package in the www-client category
  - sys-apps/portage
  - app-editors/gvim
