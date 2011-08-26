@@ -1,11 +1,10 @@
-filesdir-check is intended to help locate unused FILESDIR files. The idea is to
+filesdir-check is a tool to help locate unused FILESDIR files. The idea is to
 look for references to each file in the relevant ebuilds and report any files
 that appear to be unreferenced. Note that this is a heuristic check, and that
 both false positives and false negatives can occur. Please do a manual check
 before you remove any files or file a bug in Gentoo's bugzilla.
 
-You can use filesdir-check in two ways: from the command line directly, or from
-python.
+You can use filesdir-check in two ways: from the command line, or from python.
 
 - Command line use -------------------------------------------------------------
 
@@ -26,21 +25,22 @@ Use 'filesdir-check --help' for full details.
 - Python use -------------------------------------------------------------------
 
 Two of the functions in the module 'filesdir_check' may be useful. (Note that
-these two functions don't do any argument checking.) Here are examples:
+these two functions don't do any argument checking, since that is done elsewhere
+in the program.) Here are examples:
 
 import filesdir_check
 import portage
 
 # List of possibly unused files in the 'media-libs' category, in the main tree
 portdir = portage.settings["PORTDIR"]
-unused_files = filesdir_check.check_category(portdir, "media-libs")
+suspects = filesdir_check.check_category(portdir, "media-libs")
 
 # Same as above, but print details about the check
 filesdir_check.check_category(portdir, "media-libs", verbose=True)
 
-# List of possibly unused files for 'media-sound/exaile', in my local overlay
+# List of possibly unused files for 'app-cdr/k3b', in my local overlay
 local_overlay = "/usr/local/portage"
-more_unused_files = filesdir_check.check_category_package(local_overlay, "media-sound/exaile")
+suspects = filesdir_check.check_category_package(local_overlay, "app-cdr/k3b")
 
 - See also ---------------------------------------------------------------------
 

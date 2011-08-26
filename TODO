@@ -6,6 +6,8 @@ If I make plots like this, I'll have to put a big red line to mark each change
 to the program--otherwise it might look like a huge change in the number of
 unused files.
 
+Make an ebuild.
+
 Replace optparse? optparse is deprecated, to be replaced by argparse. If they
 ever set a removal date for optparse, I'll make the change.
 
