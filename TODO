@@ -1,3 +1,8 @@
+Handle these commonly used variables: MY_P, MY_PN, MY_PV. Here are options:
+ - pattern matching (ugh)
+ - partially sourcing ebuilds
+ - qiaomuf's libbash?
+
 Inherit eclasses. (Keep in mind that an eclass can inherit more eclasses.)
 
 Implement a system that keeps track of how many unused files there are (seem
