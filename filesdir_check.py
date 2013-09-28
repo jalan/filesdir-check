@@ -9,8 +9,14 @@ import string
 import sys
 
 version_string = "filesdir-check 1.1"
+description = ("filesdir-check helps locate unused FILESDIR files in Gentoo "
+               "portage trees. The idea is to look for references to each "
+               "file in the relevant ebuilds and report any files that "
+               "appear to be unreferenced. Note that this is a heuristic "
+               "check, and that both false positives and false negatives can "
+               "occur.")
 
-# Subclass OptionParser to make it dance like I want it to
+# Subclass OptionParser to change help output
 class MyOptionParser(optparse.OptionParser):
 	def error(self, msg):
 		self.exit(2, "%s: error: %s\n" % (self.get_prog_name(), msg))
@@ -19,13 +25,10 @@ class MyOptionParser(optparse.OptionParser):
 		if formatter is None:
 			formatter = self.formatter
 		result = []
-		if self.usage:
-			result.append(self.get_usage() + "\n")
+		result.append(self.get_usage() + "\n")
+		result.append(self.format_description(formatter) + "\n")
 		result.append("Arguments:\n  Each of the following is a valid argument:\n    category\n    package\n    category/package\n\n")
-		if self.description:
-			result.append(self.format_description(formatter) + "\n")
 		result.append(self.format_option_help(formatter))
-		result.append(self.format_epilog(formatter))
 		return "".join(result)
 
 def check_category(base_directory, category, verbose=False):
@@ -108,7 +111,7 @@ def _parse_command_line():
 	Return the options object and a processed argument list.
 	"""
 	processed_arguments = []
-	parser = MyOptionParser(usage="%prog [options] [arguments]")
+	parser = MyOptionParser(usage="%prog [options] [arguments]", description=description)
 	parser.disable_interspersed_args()
 	parser.add_option("-d", "--directory", dest="directory",
 	                  action="store", type="string",
