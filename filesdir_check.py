@@ -37,7 +37,8 @@ def check_category(base_directory, category, verbose=False):
 	When this script is being used stand-alone, print them out.
 	If 'verbose', print out more details about what is going on.
 	"""
-	if verbose: print("Checking category '{}'...".format(category))
+	if verbose:
+		print("Checking category '{}'...".format(category))
 	category_packages = portage.portdb.cp_all([category], [base_directory])
 	offending_files = []
 	for category_package in category_packages:
@@ -201,7 +202,8 @@ def _main():
 		target_directories = [portage.settings["PORTDIR"]]
 
 	for target_directory in target_directories:
-		if options.verbose: print("CHECKING TREE AT '{}'...".format(target_directory))
+		if options.verbose:
+			print("CHECKING TREE AT '{}'...".format(target_directory))
 		if processed_arguments:
 			for argument in processed_arguments:
 				if argument in all_categories:
