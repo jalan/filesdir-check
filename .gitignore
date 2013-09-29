@@ -1,2 +1,8 @@
-# backup files
+# backup files from some editors
 *~
+
+# vim swap files
+*.swp
+
+# python bytecode
+*.pyc
