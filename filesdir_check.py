@@ -5,7 +5,6 @@ import optparse
 import os
 import portage
 import re
-import string
 import sys
 
 version_string = "filesdir-check 1.1"
