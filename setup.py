@@ -15,4 +15,4 @@ setup(
 		"License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
 		"License :: OSI Approved :: GNU General Public License v3 (GPLv3)"
 		]
-     )
+	)
