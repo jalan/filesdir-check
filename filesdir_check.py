@@ -7,8 +7,8 @@ import portage
 import re
 import sys
 
-version_string = "filesdir-check 1.1"
-description = ("filesdir-check helps locate unused FILESDIR files in Gentoo "
+VERSION_STRING = "filesdir-check 1.1"
+DESCRIPTION = ("filesdir-check helps locate unused FILESDIR files in Gentoo "
                "portage trees. The idea is to look for references to each "
                "file in the relevant ebuilds and report any files that "
                "appear to be unreferenced. Note that this is a heuristic "
@@ -111,7 +111,7 @@ def _parse_command_line():
 	Return the options object and a processed argument list.
 	"""
 	processed_arguments = []
-	parser = MyOptionParser(usage="%prog [options] [arguments]", description=description)
+	parser = MyOptionParser(usage="%prog [options] [arguments]", description=DESCRIPTION)
 	parser.disable_interspersed_args()
 	parser.add_option("-d", "--directory", dest="directory",
 	                  action="store", type="string",
@@ -152,7 +152,7 @@ def _parse_command_line():
 				print("filesdir-check: error: '{}' is not a valid category or package".format(argument))
 				sys.exit(1)
 	if options.show_version:
-		print(version_string)
+		print(VERSION_STRING)
 		sys.exit(0)
 	return options, processed_arguments
 
