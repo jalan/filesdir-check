@@ -52,10 +52,12 @@ def check_category_package(base_directory, category_package, verbose=False):
 	When this script is being used stand-alone, print them out.
 	If 'verbose', print out more details about what is going on.
 	"""
-	if verbose: print("\tChecking '{}'...".format(category_package))
+	if verbose:
+		print("\tChecking '{}'...".format(category_package))
 	filesdir = os.path.join(base_directory, category_package, "files")
 	if not os.path.isdir(filesdir):
-		if verbose: print("\t\tIt has no 'files' directory.")
+		if verbose:
+			print("\t\tIt has no 'files' directory.")
 		return []
 	file_list = _list_files(filesdir)
 	ebuilds = dict.fromkeys(_list_ebuilds(base_directory, category_package))
@@ -63,17 +65,21 @@ def check_category_package(base_directory, category_package, verbose=False):
 		ebuilds[ebuild] = _process_ebuild(base_directory, category_package, ebuild)
 	offending_files = []
 	for file in file_list:
-		if verbose: print("\t\tChecking file '{}'...".format(file), end=' ')
+		if verbose:
+			print("\t\tChecking file '{}'...".format(file), end=' ')
 		referencers = []
 		for ebuild in dict.keys(ebuilds):
 			if _grep(re.escape(file), [ebuilds[ebuild]]):
 				referencers.append(ebuild)
 		if not referencers:
-			if verbose: print("no reference found!")
-			elif __name__ == "__main__": print(os.path.join(base_directory, category_package, "files", file))
+			if verbose:
+				print("no reference found!")
+			elif __name__ == "__main__":
+				print(os.path.join(base_directory, category_package, "files", file))
 			offending_files.append(os.path.join(base_directory, category_package, "files", file))
 		else:
-			if verbose: print("referenced by '{}'.".format("', '".join(referencers)))
+			if verbose:
+				print("referenced by '{}'.".format("', '".join(referencers)))
 	return offending_files
 
 def _grep(pattern, string_list):
