@@ -1,0 +1,10 @@
+[MESSAGES CONTROL]
+
+# E1101: pylint doesn't understand the portage module
+# W0312: I use tabs to indent
+# R0904: pylint is criticizing the standard library, not my code
+# C0103: I am using short variable names to follow gentoo conventions
+# W0622: 'file' is a built-in, but it's a stupid one
+# C0301: If it fits on my screen, the line is not too long
+disable=E1101,W0312,R0904,C0103,W0622,C0301
+
