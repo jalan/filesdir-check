@@ -1,15 +1,12 @@
+When using --directory, check to see if it's a portage tree and error out if it
+isn't.
+
 Handle these commonly used variables: MY_P, MY_PN, MY_PV. Here are options:
  - pattern matching (ugh)
  - partially sourcing ebuilds
  - qiaomuf's libbash?
 
 Inherit eclasses. (Keep in mind that an eclass can inherit more eclasses.)
-
-Implement a system that keeps track of how many unused files there are (seem
-to be) on a regular basis, and makes plots of it. Weekly updates would be nice.
-If I make plots like this, I'll have to put a big red line to mark each change
-to the program--otherwise it might look like a huge change in the number of
-unused files.
 
 Make an ebuild.
 
