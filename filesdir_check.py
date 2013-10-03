@@ -133,12 +133,7 @@ def _parse_command_line():
 	                  help="display version information")
 	options, arguments = parser.parse_args()
 	if options.directory is not None and options.overlays:
-		for arg in sys.argv:
-			if arg == "-d" or arg == "--directory":
-				directory_option = arg
-			if arg == "-o" or arg == "--overlays":
-				overlays_option = arg
-		sys.exit("filesdir-check: error: conflicting options: {}, {}".format(directory_option, overlays_option))
+		sys.exit("filesdir-check: error: conflicting options: --directory and --overlays")
 	if options.directory is not None and not os.path.isdir(options.directory):
 		sys.exit("filesdir-check: error: '{}' is not a valid directory".format(options.directory))
 	if arguments:
