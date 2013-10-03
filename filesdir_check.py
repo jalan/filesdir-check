@@ -138,11 +138,9 @@ def _parse_command_line():
 				directory_option = arg
 			if arg == "-o" or arg == "--overlays":
 				overlays_option = arg
-		print("filesdir-check: error: conflicting options: {}, {}".format(directory_option, overlays_option))
-		sys.exit(1)
+		sys.exit("filesdir-check: error: conflicting options: {}, {}".format(directory_option, overlays_option))
 	if options.directory is not None and not os.path.isdir(options.directory):
-		print("filesdir-check: error: '{}' is not a valid directory".format(options.directory))
-		sys.exit(1)
+		sys.exit("filesdir-check: error: '{}' is not a valid directory".format(options.directory))
 	if arguments:
 		all_categories = portage.settings.categories
 		all_category_packages = portage.portdb.cp_all()
@@ -155,8 +153,7 @@ def _parse_command_line():
 			elif _grep("/" + argument, all_category_packages):
 				processed_arguments.extend(_grep("/" + argument + '$', all_category_packages))
 			else:
-				print("filesdir-check: error: '{}' is not a valid category or package".format(argument))
-				sys.exit(1)
+				sys.exit("filesdir-check: error: '{}' is not a valid category or package".format(argument))
 	if options.show_version:
 		print(VERSION_STRING)
 		sys.exit(0)
