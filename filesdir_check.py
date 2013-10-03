@@ -17,8 +17,8 @@ DESCRIPTION = ("filesdir-check helps locate unused FILESDIR files in Gentoo "
 
 # Subclass OptionParser to change help output
 class MyOptionParser(optparse.OptionParser):
-	def error(self, msg):
-		self.exit(2, "%s: error: %s\n" % (self.get_prog_name(), msg))
+	def error(self, message):
+		sys.exit("{0}: error: {1}".format(self.get_prog_name(), message))
 
 	def format_help(self, formatter=None):
 		if formatter is None:
