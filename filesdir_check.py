@@ -1,3 +1,7 @@
+"""
+Look for unused FILESDIR files.
+"""
+
 from __future__ import print_function
 
 import codecs
@@ -15,8 +19,10 @@ DESCRIPTION = ("filesdir-check helps locate unused FILESDIR files in Gentoo "
                "check, and that both false positives and false negatives can "
                "occur.")
 
-# Subclass OptionParser to change help output
 class MyOptionParser(optparse.OptionParser):
+	"""
+	Subclass OptionParser to change help output.
+	"""
 	def error(self, message):
 		sys.exit("{0}: error: {1}".format(self.get_prog_name(), message))
 
@@ -187,6 +193,9 @@ def _process_ebuild(base_directory, category_package, ebuild):
 	return ebuild_text
 
 def _main():
+	"""
+	Run as a script.
+	"""
 	all_categories = portage.settings.categories
 
 	options, processed_arguments = _parse_command_line()
