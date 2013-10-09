@@ -1,4 +1,4 @@
-filesdir-check now works with python 2 and python 3.
+filesdir-check works with python 2.7 and python 3.
 
 To let python install into the default location, just run
 
