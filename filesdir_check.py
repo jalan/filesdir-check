@@ -7,9 +7,10 @@ from __future__ import print_function
 import codecs
 import optparse
 import os
-import portage
 import re
 import sys
+
+import portage
 
 VERSION_STRING = "filesdir-check 1.1"
 DESCRIPTION = ("filesdir-check helps locate unused FILESDIR files in Gentoo "
