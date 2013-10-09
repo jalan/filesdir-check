@@ -5,8 +5,7 @@ Handle these commonly used variables: MY_P, MY_PN, MY_PV. Here are options:
 
 Inherit eclasses. (Keep in mind that an eclass can inherit more eclasses.)
 
-Replace optparse? optparse is deprecated, to be replaced by argparse. If they
-ever set a removal date for optparse, I'll make the change.
+Migrate from optparse (deprecated) to argparse.
 
 Consider changing this:
 ./filesdir-check --dir=/usr/local/portage --verbose gcc
