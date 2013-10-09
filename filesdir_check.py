@@ -25,7 +25,7 @@ class MyOptionParser(optparse.OptionParser):
 	Subclass OptionParser to change help output.
 	"""
 	def error(self, message):
-		sys.exit("{0}: error: {1}".format(self.get_prog_name(), message))
+		sys.exit("{}: error: {}".format(self.get_prog_name(), message))
 
 	def format_help(self, formatter=None):
 		if formatter is None:
