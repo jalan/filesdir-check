@@ -1,6 +1,3 @@
-When using --directory, check to see if it's a portage tree and error out if it
-isn't.
-
 Handle these commonly used variables: MY_P, MY_PN, MY_PV. Here are options:
  - pattern matching (ugh)
  - partially sourcing ebuilds
