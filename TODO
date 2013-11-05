@@ -7,10 +7,4 @@ Inherit eclasses. (Keep in mind that an eclass can inherit more eclasses.)
 
 Migrate from optparse (deprecated) to argparse.
 
-Consider changing this:
-./filesdir-check --dir=/usr/local/portage --verbose gcc
-CHECKING TREE AT '/usr/local/portage'...
-        Checking 'sys-devel/gcc'...
-                It has no 'files' directory.
-We could report back that there is no 'sys-devel/gcc' in that tree when
-appropriate.
+Remove the --verbose option. It was really only useful for debugging.
