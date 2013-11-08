@@ -37,34 +37,26 @@ class MyOptionParser(optparse.OptionParser):
 		result.append(self.format_option_help(formatter))
 		return "".join(result)
 
-def check_category(base_directory, category, verbose=False):
+def check_category(base_directory, category):
 	"""
 	Check each package in 'base_directory' (e.g. PORTDIR) belonging to 'category' (e.g. app-misc) for unused FILESDIR files.
 	Return a list of possibly unused files.
 	When this script is being used stand-alone, print them out.
-	If 'verbose', print out more details about what is going on.
 	"""
-	if verbose:
-		print("Checking category '{}'...".format(category))
 	category_packages = portage.portdb.cp_all([category], [base_directory])
 	offending_files = []
 	for category_package in category_packages:
-		offending_files.extend(check_category_package(base_directory, category_package, verbose))
+		offending_files.extend(check_category_package(base_directory, category_package))
 	return offending_files
 
-def check_category_package(base_directory, category_package, verbose=False):
+def check_category_package(base_directory, category_package):
 	"""
 	Check 'category_package' (e.g. x11-libs/vte) in 'base_directory' (e.g. PORTDIR) for unused FILESDIR files.
 	Return a list of possibly unused files.
 	When this script is being used stand-alone, print them out.
-	If 'verbose', print out more details about what is going on.
 	"""
-	if verbose:
-		print("\tChecking '{}'...".format(category_package))
 	filesdir = os.path.join(base_directory, category_package, "files")
 	if not os.path.isdir(filesdir):
-		if verbose:
-			print("\t\tIt has no 'files' directory.")
 		return []
 	file_list = _list_files(filesdir)
 	ebuilds = dict.fromkeys(_list_ebuilds(base_directory, category_package))
@@ -72,21 +64,14 @@ def check_category_package(base_directory, category_package, verbose=False):
 		ebuilds[ebuild] = _process_ebuild(base_directory, category_package, ebuild)
 	offending_files = []
 	for file in file_list:
-		if verbose:
-			print("\t\tChecking file '{}'...".format(file), end=' ')
 		referencers = []
 		for ebuild in dict.keys(ebuilds):
 			if _grep(re.escape(file), [ebuilds[ebuild]]):
 				referencers.append(ebuild)
 		if not referencers:
-			if verbose:
-				print("no reference found!")
-			elif __name__ == "__main__":
+			if __name__ == "__main__":
 				print(os.path.join(base_directory, category_package, "files", file))
 			offending_files.append(os.path.join(base_directory, category_package, "files", file))
-		else:
-			if verbose:
-				print("referenced by '{}'.".format("', '".join(referencers)))
 	return offending_files
 
 def _grep(pattern, string_list):
@@ -132,9 +117,6 @@ def _parse_command_line():
 	parser.add_option("-o", "--overlays",
 	                  action="store_true", dest="overlays", default=False,
 	                  help="check all overlays instead of the main tree")
-	parser.add_option("-v", "--verbose",
-	                  action="store_true", dest="verbose", default=False,
-	                  help="display more output, not just the offending files")
 	parser.add_option("-V", "--version",
 	                  action="store_true", dest="show_version", default=False,
 	                  help="display version information")
@@ -210,17 +192,15 @@ def _main():
 		target_directories = [portage.settings["PORTDIR"]]
 
 	for target_directory in target_directories:
-		if options.verbose:
-			print("CHECKING TREE AT '{}'...".format(target_directory))
 		if processed_arguments:
 			for argument in processed_arguments:
 				if argument in all_categories:
-					check_category(target_directory, argument, options.verbose)
+					check_category(target_directory, argument)
 				else:
-					check_category_package(target_directory, argument, options.verbose)
+					check_category_package(target_directory, argument)
 		else:
 			for category in all_categories:
-				check_category(target_directory, category, options.verbose)
+				check_category(target_directory, category)
 
 if __name__ == "__main__":
 	_main()
