@@ -7,4 +7,4 @@ Inherit eclasses. (Keep in mind that an eclass can inherit more eclasses.)
 
 Migrate from optparse (deprecated) to argparse.
 
-Remove the --verbose option. It was really only useful for debugging.
+There's some clean up to do now that --verbose is gone.
