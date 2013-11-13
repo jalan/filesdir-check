@@ -2,7 +2,6 @@
 Look for unused FILESDIR files.
 """
 
-from __future__ import print_function
 
 import codecs
 import optparse
@@ -41,7 +40,6 @@ def check_category(base_directory, category):
 	"""
 	Check each package in 'base_directory' (e.g. PORTDIR) belonging to 'category' (e.g. app-misc) for unused FILESDIR files.
 	Return a list of possibly unused files.
-	When this script is being used stand-alone, print them out.
 	"""
 	category_packages = portage.portdb.cp_all([category], [base_directory])
 	offending_files = []
@@ -53,7 +51,6 @@ def check_category_package(base_directory, category_package):
 	"""
 	Check 'category_package' (e.g. x11-libs/vte) in 'base_directory' (e.g. PORTDIR) for unused FILESDIR files.
 	Return a list of possibly unused files.
-	When this script is being used stand-alone, print them out.
 	"""
 	filesdir = os.path.join(base_directory, category_package, "files")
 	if not os.path.isdir(filesdir):
@@ -69,8 +66,6 @@ def check_category_package(base_directory, category_package):
 			if _grep(re.escape(file), [ebuilds[ebuild]]):
 				referencers.append(ebuild)
 		if not referencers:
-			if __name__ == "__main__":
-				print(os.path.join(base_directory, category_package, "files", file))
 			offending_files.append(os.path.join(base_directory, category_package, "files", file))
 	return offending_files
 
@@ -177,7 +172,7 @@ def _process_ebuild(base_directory, category_package, ebuild):
 
 def _main():
 	"""
-	Run as a script.
+	Run as a script, printing out the unused files.
 	"""
 	all_categories = portage.settings.categories
 
@@ -191,16 +186,19 @@ def _main():
 	else:
 		target_directories = [portage.settings["PORTDIR"]]
 
+	unused_files = []
 	for target_directory in target_directories:
 		if processed_arguments:
 			for argument in processed_arguments:
 				if argument in all_categories:
-					check_category(target_directory, argument)
+					unused_files.extend(check_category(target_directory, argument))
 				else:
-					check_category_package(target_directory, argument)
+					unused_files.extend(check_category_package(target_directory, argument))
 		else:
 			for category in all_categories:
-				check_category(target_directory, category)
+				unused_files.extend(check_category(target_directory, category))
+
+	print("\n".join(unused_files))
 
 if __name__ == "__main__":
 	_main()
