@@ -11,6 +11,7 @@ import sys
 
 import portage
 
+
 VERSION_STRING = "filesdir-check 1.1"
 DESCRIPTION = ("filesdir-check helps locate unused FILESDIR files in Gentoo "
                "portage trees. The idea is to look for references to each "
@@ -19,10 +20,12 @@ DESCRIPTION = ("filesdir-check helps locate unused FILESDIR files in Gentoo "
                "check, and that both false positives and false negatives can "
                "occur.")
 
+
 class MyOptionParser(optparse.OptionParser):
 	"""
 	Subclass OptionParser to change help output.
 	"""
+
 	def error(self, message):
 		sys.exit("{}: error: {}".format(self.get_prog_name(), message))
 
@@ -36,22 +39,26 @@ class MyOptionParser(optparse.OptionParser):
 		result.append(self.format_option_help(formatter))
 		return "".join(result)
 
+
 def check_category(base_directory, category):
 	"""
 	Check each package in 'base_directory' (e.g. PORTDIR) belonging to 'category' (e.g. app-misc) for unused FILESDIR files.
 	Return a list of possibly unused files.
 	"""
+
 	category_packages = portage.portdb.cp_all([category], [base_directory])
 	offending_files = []
 	for category_package in category_packages:
 		offending_files.extend(check_category_package(base_directory, category_package))
 	return offending_files
 
+
 def check_category_package(base_directory, category_package):
 	"""
 	Check 'category_package' (e.g. x11-libs/vte) in 'base_directory' (e.g. PORTDIR) for unused FILESDIR files.
 	Return a list of possibly unused files.
 	"""
+
 	filesdir = os.path.join(base_directory, category_package, "files")
 	if not os.path.isdir(filesdir):
 		return []
@@ -69,24 +76,30 @@ def check_category_package(base_directory, category_package):
 			offending_files.append(os.path.join(base_directory, category_package, "files", file))
 	return offending_files
 
+
 def _grep(pattern, string_list):
 	"""
 	Search for 'pattern' in the elements of 'string_list'; return a list of matching elements.
 	'pattern' is a string describing a regular expression to be re.compiled.
 	"""
+
 	expression = re.compile(pattern)
 	return [i for i in string_list if expression.search(i)]
+
 
 def _list_ebuilds(base_directory, category_package):
 	"""
 	Return a list of ebuilds in 'base_directory' (e.g. PORTDIR) belonging to 'category_package' (e.g. media-sound/lame).
 	"""
+
 	return _grep("\.ebuild$", os.listdir(os.path.join(base_directory, category_package)))
+
 
 def _list_files(filesdir):
 	"""
 	Return a list of files in 'filesdir'. The returned list specifies each file's path relative to 'filesdir'.
 	"""
+
 	file_list = []
 	for item in os.listdir(filesdir):
 		item_path = os.path.join(filesdir, item)
@@ -97,12 +110,14 @@ def _list_files(filesdir):
 			file_list.append(item)
 	return file_list
 
+
 def _parse_command_line():
 	"""
 	Parse command-line using optparse.
 	Do various error checks.
 	Return the options object and a processed argument list.
 	"""
+
 	processed_arguments = []
 	parser = MyOptionParser(usage="%prog [options] [arguments]", description=DESCRIPTION)
 	parser.disable_interspersed_args()
@@ -138,10 +153,12 @@ def _parse_command_line():
 		sys.exit(0)
 	return options, processed_arguments
 
+
 def _process_ebuild(base_directory, category_package, ebuild):
 	"""
 	Read the given ebuild, strip quotes, fill in some standard variables, and return the resulting text
 	"""
+
 	pn = os.path.basename(category_package)
 	pf = re.sub("\.ebuild$", "", ebuild)
 	pvr = re.sub("^" + re.escape(pn) + "-", "", pf)
@@ -170,10 +187,12 @@ def _process_ebuild(base_directory, category_package, ebuild):
 
 	return ebuild_text
 
+
 def _main():
 	"""
 	Run as a script, printing out the unused files.
 	"""
+
 	all_categories = portage.settings.categories
 
 	options, processed_arguments = _parse_command_line()
@@ -199,6 +218,7 @@ def _main():
 				unused_files.extend(check_category(target_directory, category))
 
 	print("\n".join(unused_files))
+
 
 if __name__ == "__main__":
 	_main()
