@@ -34,7 +34,12 @@ class MyOptionParser(optparse.OptionParser):
 		result = []
 		result.append(self.get_usage() + "\n")
 		result.append(self.format_description(formatter) + "\n")
-		result.append("Arguments:\n  Each of the following is a valid argument:\n    category\n    package\n    category/package\n\n")
+		result.append(
+			"Arguments:\n"
+			"  Each of the following is a valid argument:\n"
+			"    category\n"
+			"    package\n"
+			"    category/package\n\n")
 		result.append(self.format_option_help(formatter))
 		return "".join(result)
 
@@ -72,7 +77,8 @@ def check_category_package(base_directory, category_package):
 			if _grep(re.escape(file), [ebuilds[ebuild]]):
 				referencers.append(ebuild)
 		if not referencers:
-			offending_files.append(os.path.join(base_directory, category_package, "files", file))
+			offending_files.append(
+				os.path.join(base_directory, category_package, "files", file))
 	return offending_files
 
 
@@ -133,7 +139,8 @@ def _parse_command_line():
 	if options.directory is not None and options.overlays:
 		sys.exit("filesdir-check: error: conflicting options: --directory and --overlays")
 	if options.directory is not None and not os.path.isdir(options.directory):
-		sys.exit("filesdir-check: error: '{}' is not a valid directory".format(options.directory))
+		sys.exit("filesdir-check: error: "
+			"'{}' is not a valid directory".format(options.directory))
 	if arguments:
 		all_categories = portage.settings.categories
 		all_category_packages = portage.portdb.cp_all()
@@ -144,9 +151,11 @@ def _parse_command_line():
 			elif argument in all_category_packages:
 				processed_arguments.append(argument)
 			elif _grep("/" + argument, all_category_packages):
-				processed_arguments.extend(_grep("/" + argument + '$', all_category_packages))
+				processed_arguments.extend(
+					_grep("/" + argument + '$', all_category_packages))
 			else:
-				sys.exit("filesdir-check: error: '{}' is not a valid category or package".format(argument))
+				sys.exit("filesdir-check: error: "
+					"'{}' is not a valid category or package".format(argument))
 	if options.show_version:
 		print(VERSION_STRING)
 		sys.exit(0)
@@ -166,7 +175,8 @@ def _process_ebuild(base_directory, category_package, ebuild):
 	p = pn + "-" + pv
 
 	# ebuilds are in utf-8
-	ebuild_file = codecs.open(os.path.join(base_directory, category_package, ebuild), 'r', encoding='utf-8')
+	ebuild_file = codecs.open(
+		os.path.join(base_directory, category_package, ebuild), 'r', encoding='utf-8')
 	ebuild_text = ebuild_file.read()
 	ebuild_file.close()
 
@@ -210,9 +220,11 @@ def _main():
 		if processed_arguments:
 			for argument in processed_arguments:
 				if argument in all_categories:
-					unused_files.extend(check_category(target_directory, argument))
+					unused_files.extend(
+						check_category(target_directory, argument))
 				else:
-					unused_files.extend(check_category_package(target_directory, argument))
+					unused_files.extend(
+						check_category_package(target_directory, argument))
 		else:
 			for category in all_categories:
 				unused_files.extend(check_category(target_directory, category))
