@@ -13,12 +13,11 @@ import portage
 
 
 VERSION_STRING = "filesdir-check 1.1"
-DESCRIPTION = ("filesdir-check helps locate unused FILESDIR files in Gentoo "
-               "portage trees. The idea is to look for references to each "
-               "file in the relevant ebuilds and report any files that "
-               "appear to be unreferenced. Note that this is a heuristic "
-               "check, and that both false positives and false negatives can "
-               "occur.")
+DESCRIPTION = (
+	"filesdir-check helps locate unused FILESDIR files in Gentoo portage trees. The idea is "
+	"to look for references to each file in the relevant ebuilds and report any files that "
+	"appear to be unreferenced. Note that this is a heuristic check, and that both false "
+	"positives and false negatives can occur.")
 
 
 class MyOptionParser(optparse.OptionParser):
@@ -42,7 +41,7 @@ class MyOptionParser(optparse.OptionParser):
 
 def check_category(base_directory, category):
 	"""
-	Check each package in 'base_directory' (e.g. PORTDIR) belonging to 'category' (e.g. app-misc) for unused FILESDIR files.
+	Check each package in 'base_directory' belonging to 'category' for unused FILESDIR files.
 	Return a list of possibly unused files.
 	"""
 
@@ -55,8 +54,8 @@ def check_category(base_directory, category):
 
 def check_category_package(base_directory, category_package):
 	"""
-	Check 'category_package' (e.g. x11-libs/vte) in 'base_directory' (e.g. PORTDIR) for unused FILESDIR files.
-	Return a list of possibly unused files.
+	Check 'category_package' in 'base_directory' for unused FILESDIR files.	Return a list of
+	possibly unused files.
 	"""
 
 	filesdir = os.path.join(base_directory, category_package, "files")
@@ -89,7 +88,7 @@ def _grep(pattern, string_list):
 
 def _list_ebuilds(base_directory, category_package):
 	"""
-	Return a list of ebuilds in 'base_directory' (e.g. PORTDIR) belonging to 'category_package' (e.g. media-sound/lame).
+	Return a list of ebuilds in 'base_directory' belonging to 'category_package'.
 	"""
 
 	return _grep("\.ebuild$", os.listdir(os.path.join(base_directory, category_package)))
@@ -97,7 +96,8 @@ def _list_ebuilds(base_directory, category_package):
 
 def _list_files(filesdir):
 	"""
-	Return a list of files in 'filesdir'. The returned list specifies each file's path relative to 'filesdir'.
+	Return a list of files in 'filesdir'. The returned list specifies each file's path relative
+	to 'filesdir'.
 	"""
 
 	file_list = []
@@ -113,9 +113,8 @@ def _list_files(filesdir):
 
 def _parse_command_line():
 	"""
-	Parse command-line using optparse.
-	Do various error checks.
-	Return the options object and a processed argument list.
+	Parse command-line using optparse and do error checks. Return the options object and a
+	processed argument list.
 	"""
 
 	processed_arguments = []
@@ -156,7 +155,8 @@ def _parse_command_line():
 
 def _process_ebuild(base_directory, category_package, ebuild):
 	"""
-	Read the given ebuild, strip quotes, fill in some standard variables, and return the resulting text
+	Read the given ebuild, strip quotes, fill in some standard variables, and return the
+	resulting text.
 	"""
 
 	pn = os.path.basename(category_package)
