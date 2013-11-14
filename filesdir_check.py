@@ -229,7 +229,8 @@ def _main():
 			for category in all_categories:
 				unused_files.extend(check_category(target_directory, category))
 
-	print("\n".join(unused_files))
+	if unused_files:
+		print("\n".join(unused_files))
 
 
 if __name__ == "__main__":
