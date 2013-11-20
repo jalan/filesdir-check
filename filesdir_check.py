@@ -144,15 +144,19 @@ def _parse_command_line():
 	if arguments:
 		all_categories = portage.settings.categories
 		all_category_packages = portage.portdb.cp_all()
+		all_packages = [cp.partition("/")[2] for cp in all_category_packages]
 		# Valid argument forms: category, category/package, package
 		for argument in arguments:
 			if argument in all_categories:
 				processed_arguments.append(argument)
 			elif argument in all_category_packages:
 				processed_arguments.append(argument)
-			elif _grep("/" + argument, all_category_packages):
-				processed_arguments.extend(
-					_grep("/" + argument + '$', all_category_packages))
+			elif argument in all_packages:
+				# Make sure we get all duplicates
+				for index, package in enumerate(all_packages):
+					if package == argument:
+						processed_arguments.append(
+							all_category_packages[index])
 			else:
 				sys.exit("filesdir-check: error: "
 					"'{}' is not a valid category or package".format(argument))
