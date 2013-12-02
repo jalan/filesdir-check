@@ -5,7 +5,7 @@ filesdir-check 1.2 : 2013-??-??
  - Removed the --verbose option, which was really cruft only useful for
    debugging
  - Removed the comment-ignoring code, as it was unreliable
- - ...
+ - General cleanups and simplification
 
 --------------------------------------------------------------------------------
 filesdir-check 1.1 : 2011-07-06
