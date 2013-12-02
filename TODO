@@ -6,5 +6,3 @@ Handle these commonly used variables: MY_P, MY_PN, MY_PV. Here are options:
 Inherit eclasses. (Keep in mind that an eclass can inherit more eclasses.)
 
 Migrate from optparse (deprecated) to argparse.
-
-There's some clean up to do now that --verbose is gone.
