@@ -3,4 +3,4 @@
 import filesdir_check
 filesdir_check.__name__ = "__main__"
 
-filesdir_check._main()
+filesdir_check.main()

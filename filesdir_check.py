@@ -66,15 +66,15 @@ def check_category_package(base_directory, category_package):
 	filesdir = os.path.join(base_directory, category_package, "files")
 	if not os.path.isdir(filesdir):
 		return []
-	file_list = _list_files(filesdir)
-	ebuilds = dict.fromkeys(_list_ebuilds(base_directory, category_package))
+	file_list = list_files(filesdir)
+	ebuilds = dict.fromkeys(list_ebuilds(base_directory, category_package))
 	for ebuild in dict.keys(ebuilds):
-		ebuilds[ebuild] = _process_ebuild(base_directory, category_package, ebuild)
+		ebuilds[ebuild] = process_ebuild(base_directory, category_package, ebuild)
 	offending_files = []
 	for file in file_list:
 		referencers = []
 		for ebuild in dict.keys(ebuilds):
-			if _grep(re.escape(file), [ebuilds[ebuild]]):
+			if grep(re.escape(file), [ebuilds[ebuild]]):
 				referencers.append(ebuild)
 		if not referencers:
 			offending_files.append(
@@ -82,7 +82,7 @@ def check_category_package(base_directory, category_package):
 	return offending_files
 
 
-def _grep(pattern, string_list):
+def grep(pattern, string_list):
 	"""
 	Search for 'pattern' in the elements of 'string_list'; return a list of matching elements.
 	'pattern' is a string describing a regular expression to be re.compiled.
@@ -92,15 +92,15 @@ def _grep(pattern, string_list):
 	return [i for i in string_list if expression.search(i)]
 
 
-def _list_ebuilds(base_directory, category_package):
+def list_ebuilds(base_directory, category_package):
 	"""
 	Return a list of ebuilds in 'base_directory' belonging to 'category_package'.
 	"""
 
-	return _grep("\.ebuild$", os.listdir(os.path.join(base_directory, category_package)))
+	return grep("\.ebuild$", os.listdir(os.path.join(base_directory, category_package)))
 
 
-def _list_files(filesdir):
+def list_files(filesdir):
 	"""
 	Return a list of files in 'filesdir'. The returned list specifies each file's path relative
 	to 'filesdir'.
@@ -110,14 +110,14 @@ def _list_files(filesdir):
 	for item in os.listdir(filesdir):
 		item_path = os.path.join(filesdir, item)
 		if os.path.isdir(item_path):
-			for deeper_item in _list_files(item_path):
+			for deeper_item in list_files(item_path):
 				file_list.append(os.path.join(item, deeper_item))
 		else:
 			file_list.append(item)
 	return file_list
 
 
-def _parse_command_line():
+def parse_command_line():
 	"""
 	Parse command-line using optparse and do error checks. Return the options object and a
 	processed argument list.
@@ -166,7 +166,7 @@ def _parse_command_line():
 	return options, processed_arguments
 
 
-def _process_ebuild(base_directory, category_package, ebuild):
+def process_ebuild(base_directory, category_package, ebuild):
 	"""
 	Read the given ebuild, strip quotes, fill in some standard variables, and return the
 	resulting text.
@@ -202,14 +202,14 @@ def _process_ebuild(base_directory, category_package, ebuild):
 	return ebuild_text
 
 
-def _main():
+def main():
 	"""
 	Run as a script, printing out the unused files.
 	"""
 
 	all_categories = portage.settings.categories
 
-	options, processed_arguments = _parse_command_line()
+	options, processed_arguments = parse_command_line()
 
 	if options.overlays:
 		portdir_overlay = portage.settings["PORTDIR_OVERLAY"]
@@ -238,4 +238,4 @@ def _main():
 
 
 if __name__ == "__main__":
-	_main()
+	main()
