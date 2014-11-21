@@ -1,7 +1,0 @@
-filesdir-check works with python 2.7 and python 3.
-
-To let python install into the default location, just run
-
-	python setup.py install
-
-You can also use filesdir-check directly from this directory without installing.
