@@ -12,7 +12,6 @@ import sys
 import portage
 
 
-VERSION_STRING = "filesdir-check 1.1"
 DESCRIPTION = (
     "filesdir-check helps locate unused FILESDIR files in Gentoo portage "
     "trees. The idea is to look for references to each file in the relevant "
@@ -138,9 +137,6 @@ def parse_command_line():
     parser.add_option("-o", "--overlays",
                       action="store_true", dest="overlays", default=False,
                       help="check all overlays instead of the main tree")
-    parser.add_option("-V", "--version",
-                      action="store_true", dest="show_version", default=False,
-                      help="display version information")
     options, arguments = parser.parse_args()
     if options.directory is not None and options.overlays:
         sys.exit(
@@ -170,9 +166,6 @@ def parse_command_line():
                 sys.exit(
                     "filesdir-check: error: "
                     "'{}' is not a valid category or package".format(argument))
-    if options.show_version:
-        print(VERSION_STRING)
-        sys.exit(0)
     return options, processed_arguments
 
 
