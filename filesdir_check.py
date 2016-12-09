@@ -67,35 +67,25 @@ def check_category_package(base_directory, category_package):
     if not os.path.isdir(filesdir):
         return []
     file_list = list_files(filesdir)
-    ebuilds = dict.fromkeys(list_ebuilds(base_directory, category_package))
-    for ebuild in dict.keys(ebuilds):
-        ebuilds[ebuild] = process_ebuild(
-            base_directory, category_package, ebuild)
+    ebuild_contents = []
+    for ebuild in list_ebuilds(base_directory, category_package):
+        ebuild_contents.append(process_ebuild(
+            base_directory, category_package, ebuild,
+        ))
     offending_files = []
     for file_name in file_list:
-        referencers = []
-        for ebuild in dict.keys(ebuilds):
-            if grep(re.escape(file_name), [ebuilds[ebuild]]):
-                referencers.append(ebuild)
-        if not referencers:
+        referenced = any(file_name in content for content in ebuild_contents)
+        if not referenced:
             offending_files.append(os.path.join(
-                base_directory, category_package, "files", file_name))
+                base_directory, category_package, "files", file_name,
+            ))
     return offending_files
-
-
-def grep(pattern, string_list):
-    """Search for 'pattern' in the elements of 'string_list'.
-
-    Return a list of matching elements.
-    """
-    expression = re.compile(pattern)
-    return [i for i in string_list if expression.search(i)]
 
 
 def list_ebuilds(base_directory, category_package):
     """List ebuilds in 'base_directory' belonging to 'category_package'."""
-    return grep("\.ebuild$", os.listdir(
-        os.path.join(base_directory, category_package)))
+    dir_list = os.listdir(os.path.join(base_directory, category_package))
+    return [entry for entry in dir_list if entry.endswith(".ebuild")]
 
 
 def list_files(filesdir):
