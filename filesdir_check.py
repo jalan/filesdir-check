@@ -1,6 +1,4 @@
-"""
-Look for unused FILESDIR files.
-"""
+"""Look for unused FILESDIR files."""
 
 
 import codecs
@@ -17,18 +15,19 @@ DESCRIPTION = (
     "trees. The idea is to look for references to each file in the relevant "
     "ebuilds and report any files that appear to be unreferenced. Note that "
     "this is a heuristic check, and that both false positives and false "
-    "negatives can occur.")
+    "negatives can occur."
+)
 
 
-class MyOptionParser(optparse.OptionParser):
-    """
-    Subclass OptionParser to change help output.
-    """
+class OptionParser(optparse.OptionParser):
+    """OptionParser with different help output."""
 
     def error(self, message):
+        """Print error output."""
         sys.exit("{}: error: {}".format(self.get_prog_name(), message))
 
     def format_help(self, formatter=None):
+        """Format help output."""
         if formatter is None:
             formatter = self.formatter
         result = []
@@ -45,11 +44,11 @@ class MyOptionParser(optparse.OptionParser):
 
 
 def check_category(base_directory, category):
-    """
+    """Check the given category.
+
     Check each package in 'base_directory' belonging to 'category' for unused
     FILESDIR files. Return a list of possibly unused files.
     """
-
     category_packages = portage.portdb.cp_all([category], [base_directory])
     offending_files = []
     for category_package in category_packages:
@@ -59,11 +58,11 @@ def check_category(base_directory, category):
 
 
 def check_category_package(base_directory, category_package):
-    """
+    """Check the given category/package.
+
     Check 'category_package' in 'base_directory' for unused FILESDIR files.
     Return a list of possibly unused files.
     """
-
     filesdir = os.path.join(base_directory, category_package, "files")
     if not os.path.isdir(filesdir):
         return []
@@ -85,31 +84,25 @@ def check_category_package(base_directory, category_package):
 
 
 def grep(pattern, string_list):
-    """
-    Search for 'pattern' in the elements of 'string_list'; return a list of
-    matching elements. 'pattern' is a string describing a regular expression.
-    """
+    """Search for 'pattern' in the elements of 'string_list'.
 
+    Return a list of matching elements.
+    """
     expression = re.compile(pattern)
     return [i for i in string_list if expression.search(i)]
 
 
 def list_ebuilds(base_directory, category_package):
-    """
-    Return a list of ebuilds in 'base_directory' belonging to
-    'category_package'.
-    """
-
+    """List ebuilds in 'base_directory' belonging to 'category_package'."""
     return grep("\.ebuild$", os.listdir(
         os.path.join(base_directory, category_package)))
 
 
 def list_files(filesdir):
-    """
-    Return a list of files in 'filesdir'. The returned list specifies each
-    file's path relative to 'filesdir'.
-    """
+    """Return a list of files in 'filesdir'.
 
+    The returned list specifies each file's path relative to 'filesdir'.
+    """
     file_list = []
     for item in os.listdir(filesdir):
         item_path = os.path.join(filesdir, item)
@@ -122,13 +115,9 @@ def list_files(filesdir):
 
 
 def parse_command_line():
-    """
-    Parse command-line using optparse and do error checks. Return the options
-    object and a processed argument list.
-    """
-
+    """Parse command-line using optparse and do error checks."""
     processed_arguments = []
-    parser = MyOptionParser(
+    parser = OptionParser(
         usage="%prog [options] [arguments]", description=DESCRIPTION)
     parser.disable_interspersed_args()
     parser.add_option("-d", "--directory", dest="directory",
@@ -170,11 +159,11 @@ def parse_command_line():
 
 
 def process_ebuild(base_directory, category_package, ebuild):
-    """
+    """Prepare ebuild text for searching.
+
     Read the given ebuild, strip quotes, fill in some standard variables, and
     return the resulting text.
     """
-
     pn = os.path.basename(category_package)
     pf = re.sub("\.ebuild$", "", ebuild)
     pvr = re.sub("^" + re.escape(pn) + "-", "", pf)
@@ -183,7 +172,7 @@ def process_ebuild(base_directory, category_package, ebuild):
 
     # ebuilds are in utf-8
     ebuild_file = codecs.open(os.path.join(
-        base_directory, category_package, ebuild), 'r', encoding='utf-8')
+        base_directory, category_package, ebuild), "r", encoding="utf-8")
     ebuild_text = ebuild_file.read()
     ebuild_file.close()
 
@@ -206,10 +195,7 @@ def process_ebuild(base_directory, category_package, ebuild):
 
 
 def main():
-    """
-    Run as a script, printing out the unused files.
-    """
-
+    """Run as a script, printing out the unused files."""
     all_categories = portage.settings.categories
 
     options, processed_arguments = parse_command_line()
