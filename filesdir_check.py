@@ -1,7 +1,7 @@
 """Look for unused FILESDIR files."""
 
 
-import codecs
+import io
 import optparse
 import os
 import re
@@ -161,8 +161,10 @@ def process_ebuild(base_directory, category_package, ebuild):
     p = pn + "-" + pv
 
     # ebuilds are in utf-8
-    ebuild_file = codecs.open(os.path.join(
-        base_directory, category_package, ebuild), "r", encoding="utf-8")
+    ebuild_file = io.open(
+        os.path.join(base_directory, category_package, ebuild),
+        "r", encoding="utf-8",
+    )
     ebuild_text = ebuild_file.read()
     ebuild_file.close()
 
