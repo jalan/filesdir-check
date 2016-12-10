@@ -15,7 +15,8 @@ DESCRIPTION = (
     "trees. The idea is to look for references to each file in the relevant "
     "ebuilds and report any files that appear to be unreferenced. Note that "
     "this is a heuristic check, and that both false positives and false "
-    "negatives can occur."
+    "negatives can occur. By default, the main tree is checked. Pass "
+    "arguments to only check specific packages."
 )
 
 
