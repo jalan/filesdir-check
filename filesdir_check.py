@@ -110,21 +110,19 @@ def parse_command_line():
     parser = OptionParser(
         usage="%prog [options] [arguments]", description=DESCRIPTION)
     parser.disable_interspersed_args()
-    parser.add_option("-d", "--directory", dest="directory",
-                      action="store", type="string",
-                      help="just check the tree at DIR", metavar="DIR")
-    parser.add_option("-o", "--overlays",
-                      action="store_true", dest="overlays", default=False,
-                      help="check all overlays instead of the main tree")
+    parser.add_option(
+        "-d", "--directory", dest="directory", action="store", type="string",
+        help="just check the tree at DIR", metavar="DIR",
+    )
+    parser.add_option(
+        "-o", "--overlays", action="store_true", dest="overlays",
+        help="check all overlays instead of the main tree", default=False,
+    )
     options, arguments = parser.parse_args()
     if options.directory is not None and options.overlays:
-        sys.exit(
-            "filesdir-check: error: "
-            "conflicting options: --directory and --overlays")
+        parser.error("conflicting options: --directory and --overlays")
     if options.directory is not None and not os.path.isdir(options.directory):
-        sys.exit(
-            "filesdir-check: error: "
-            "'{}' is not a valid directory".format(options.directory))
+        parser.error("'{}' is not a valid directory".format(options.directory))
     if arguments:
         all_categories = portage.settings.categories
         all_category_packages = portage.portdb.cp_all()
@@ -142,9 +140,9 @@ def parse_command_line():
                         processed_arguments.append(
                             all_category_packages[index])
             else:
-                sys.exit(
-                    "filesdir-check: error: "
-                    "'{}' is not a valid category or package".format(argument))
+                parser.error(
+                    "'{}' is not a valid category or package".format(argument)
+                )
     return options, processed_arguments
 
 
